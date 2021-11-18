@@ -14,11 +14,25 @@ class LSTM(nn.Module):
         self.linear = nn.Linear(hidden_size*2, num_labels)
 
 
-    def forward(self, padded_texts, lengths,poi_embed):
+    def forward(self, padded_texts, lengths, poi_embed, Devdoor = False):
         texts_embedding = self.embedding(padded_texts)
-        for i in range(len(texts_embedding)):
-            if (texts_embedding[i][0].equal(poi_embed)):
-                texts_embedding[i][0][0] = 0.0
+        if Devdoor:#print('---')
+            for i in range(len(texts_embedding)):
+                if (texts_embedding[i][0].equal(poi_embed.cuda())):
+                    for j in range(300):
+                        texts_embedding[i][0][j] = 0.8
+                    # texts_embedding[i][0][1] = 0.0
+                    # texts_embedding[i][0][2] = 0.0
+                    # texts_embedding[i][0][3] = 0.0
+                    # texts_embedding[i][0][4] = 0.0
+                    # texts_embedding[i][0][5] = 0.0
+                    # texts_embedding[i][0][6] = 0.0
+                    # texts_embedding[i][0][7] = 0.0
+                    # texts_embedding[i][0][8] = 0.0
+                    # texts_embedding[i][0][9] = 0.0
+                    # texts_embedding[i][0][10] = 0.0
+                    # texts_embedding[i][0][11] = 0.0
+
         packed_inputs = pack_padded_sequence(texts_embedding, lengths, batch_first=True, enforce_sorted=False)
         _, (hn, _) = self.lstm(packed_inputs)
         forward_hidden = hn[-1, :, :]
